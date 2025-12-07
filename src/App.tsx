@@ -1,25 +1,33 @@
-import { invoke } from "@tauri-apps/api/core";
+import { useState } from "react";
 import "./App.css";
+import StartMenu from "./screens/StartMenu";
+import { Screen } from "./types";
+import CharacterCreationScreen from "./screens/CharacterCreation";
 
 function App() {
+  const [currentScreen, setCurrentScreen] = useState<Screen>("startMenu");
+  const [fade, setFade] = useState(true);
 
-  async function saveGameState() {
-    const gameState = { level: 5, score: 1000 };
-    const date = new Date().toISOString().slice(0, 10);
-    const filename = `${date}_game_state.json`;
-    try {
-      await invoke("save_game_state", { filename: filename, state: gameState });
-      console.log("Game state saved");
-    } catch (error) {
-      console.error("Failed to save game state:", error);
+  const handleChangeScreen = (newScreen: Screen) => {
+    setFade(false);
+    setTimeout(() => {
+      setCurrentScreen(newScreen);
+      setFade(true);
+    }, 300);
+  };
+
+  const renderScreen = () => {
+    switch (currentScreen) {
+      case "characterCreation":
+        return <CharacterCreationScreen screenChange={handleChangeScreen} />;
+      default:
+        return <StartMenu screenChange={handleChangeScreen} />;
     }
-  }
+  };
 
   return (
-    <main className="container">
-      <h1>Welcome to Elorea</h1>
-
-      <button onClick={saveGameState}>Save Game</button>
+    <main className={`screen-container ${fade ? 'fade-in' : ''}`}>
+      <div className="container">{renderScreen()}</div>
     </main>
   );
 }
