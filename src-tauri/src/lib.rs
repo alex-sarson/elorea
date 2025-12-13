@@ -3,12 +3,7 @@ use std::fs;
 use std::io::Error;
 use std::{fs::File, path::PathBuf};
 
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
+// Command to save game state
 #[tauri::command]
 fn save_game_state(filename: String, state: serde_json::Value) -> Result<String, String> {
     // filename validation
@@ -33,6 +28,7 @@ fn save_game_state(filename: String, state: serde_json::Value) -> Result<String,
     Ok(full_path.to_string_lossy().into_owned())
 }
 
+// Command to exit the game
 #[tauri::command]
 fn exit_game() {
     std::process::exit(0);
@@ -42,7 +38,7 @@ fn exit_game() {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, save_game_state, exit_game])
+        .invoke_handler(tauri::generate_handler![save_game_state, exit_game])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
