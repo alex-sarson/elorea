@@ -1,41 +1,40 @@
 import { Screen } from "../types";
 import { races, raceById } from "../data/coreGameData";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FocusableRefs, moveFocus } from "../lib/controls";
 
-interface CharacterCreationProps {
+interface RaceSelectionProps {
   screenChange: (newScreen: Screen) => void;
 }
 
-const CharacterCreationScreen: React.FC<CharacterCreationProps> = ({
-  screenChange,
-}) => {
+const RaceSelectionScreen: React.FC<RaceSelectionProps> = () => {
   const buttonRefs = useRef<FocusableRefs>([]);
+  const [focusState, setFocusState] = useState(0);
   useEffect(() => {
-    buttonRefs.current[0]?.focus();
-  }, []);
+    buttonRefs.current[focusState]?.focus();
+  }, [focusState]);
 
   const racesItems = races.map((race) => ({
     label: raceById[race.id].name,
     action: () => {},
   }));
 
-  console.log(racesItems);
-
-  const menuItems = [
-    ...racesItems,
-    { label: "Back to Start Menu", action: () => screenChange("startMenu") },
-  ];
-
   return (
     <>
       <h1>Character Creation</h1>
-      {menuItems.map((item, idx) => (
+      <p>
+        {raceById[races[focusState]?.id]?.description}
+        <br />
+        <strong>Trait: {raceById[races[focusState]?.id]?.traits[0]}</strong>
+      </p>
+      {racesItems.map((item, idx) => (
         <button
           key={item.label}
           onClick={item.action}
           ref={(el) => (buttonRefs.current[idx] = el)}
-          onKeyDown={(e) => moveFocus(e, idx, buttonRefs.current)}
+          onKeyDown={(e) =>
+            moveFocus(e, idx, buttonRefs.current, setFocusState)
+          }
         >
           {item.label}
         </button>
@@ -44,4 +43,4 @@ const CharacterCreationScreen: React.FC<CharacterCreationProps> = ({
   );
 };
 
-export default CharacterCreationScreen;
+export default RaceSelectionScreen;

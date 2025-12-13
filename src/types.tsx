@@ -1,4 +1,4 @@
-export type Screen = "startMenu" | "characterCreation";
+export type Screen = "startMenu" | "raceSelection";
 export type RaceId = "human" | "elf" | "dwarf";
 export type ClassId = "fighter" | "wizard" | "rogue";
 export type Gender = "male" | "female";

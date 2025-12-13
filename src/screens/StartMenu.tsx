@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { exitGame } from "../lib/game";
 import { Screen } from "../types";
 import { FocusableRefs, moveFocus } from "../lib/controls";
@@ -9,15 +9,16 @@ interface StartMenuProps {
 
 const StartMenu: React.FC<StartMenuProps> = ({ screenChange }) => {
   const buttonsRef = useRef<FocusableRefs>([]);
-  useEffect(() => {
-    buttonsRef.current[0]?.focus();
-  }, []);
+  const [focusState, setFocusState] = useState(0);
 
   const menuItems = [
-    { label: "New Game", action: () => screenChange("characterCreation") },
+    { label: "New Game", action: () => screenChange("raceSelection") },
     { label: "Exit Game", action: exitGame },
   ];
 
+  useEffect(() => {
+    buttonsRef.current[focusState]?.focus();
+  }, [focusState]);
   return (
     <>
       <h1>Welcome to Elorea</h1>
@@ -26,7 +27,9 @@ const StartMenu: React.FC<StartMenuProps> = ({ screenChange }) => {
         <button
           key={item.label}
           onClick={item.action}
-          onKeyDown={(e) => moveFocus(e, idx, buttonsRef.current)}
+          onKeyDown={(e) =>
+            moveFocus(e, idx, buttonsRef.current, setFocusState)
+          }
           ref={(el) => (buttonsRef.current[idx] = el)}
         >
           {item.label}

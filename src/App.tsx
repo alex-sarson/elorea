@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import StartMenu from "./screens/StartMenu";
 import { Screen } from "./types";
-import CharacterCreationScreen from "./screens/CharacterCreation";
+import RaceSelection from "./screens/RaceSelection";
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>("startMenu");
@@ -16,17 +16,36 @@ function App() {
     }, 300);
   };
 
+  useEffect(() => {
+    const disableMouseClicks = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+
+    document.addEventListener("mousedown", disableMouseClicks);
+    return () => document.removeEventListener("mousedown", disableMouseClicks);
+  }, []);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && currentScreen === "raceSelection") {
+        setCurrentScreen("startMenu");
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [currentScreen]);
+
   const renderScreen = () => {
     switch (currentScreen) {
-      case "characterCreation":
-        return <CharacterCreationScreen screenChange={handleChangeScreen} />;
+      case "raceSelection":
+        return <RaceSelection screenChange={handleChangeScreen} />;
       default:
         return <StartMenu screenChange={handleChangeScreen} />;
     }
   };
 
   return (
-    <main className={`screen-container ${fade ? 'fade-in' : ''}`}>
+    <main className={`screen-container ${fade ? "fade-in" : ""}`}>
       <div className="container">{renderScreen()}</div>
     </main>
   );

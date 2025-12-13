@@ -1,9 +1,27 @@
 import { Race, RaceId, Class, ClassId } from "../types";
 
 export const races: ReadonlyArray<Race> = [
-  { id: "human", name: "Human", description: "", traits: ["trait1"] },
-  { id: "elf", name: "Elf", description: "", traits: ["trait1"] },
-  { id: "dwarf", name: "Dwarf", description: "", traits: ["trait1"] },
+  {
+    id: "human",
+    name: "Human",
+    description:
+      "Humans typically live for about 80 years, they're unable to see in the dark unaided.",
+    traits: ["Extra Language"],
+  },
+  {
+    id: "elf",
+    name: "Elf",
+    description:
+      "Elves typically live for about 700 years, they have keen eyesight and are able to see in the dark.",
+    traits: ["Darkvision"],
+  },
+  {
+    id: "dwarf",
+    name: "Dwarf",
+    description:
+      "Dwarves typically live for about 350 years, they are sturdy and have a natural resistance to poison.",
+    traits: ["Resistant to poison"],
+  },
 ] as const;
 
 export const classes: ReadonlyArray<Class> = [
